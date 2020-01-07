@@ -5,6 +5,9 @@
 *.tfstate
 *.tfstate.*
 
+#For time being not to add provider.tf
+provider.tf
+
 # Crash log files
 crash.log
 
