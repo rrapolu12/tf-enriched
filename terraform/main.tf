@@ -21,13 +21,34 @@ resource "aws_instance" "myserver1" {
   subnet_id = "${aws_subnet.subnet1.id}"
   vpc_security_group_ids = ["{aws_security_group.sginstance}"]
 
+
+
+  tags = {
+    Name = "terraform-myserver1"
+  }
+}
+
+resource "aws_launch_configuration" "myserver1lc" {
+  image_id = "${var.ami_id}"
+  instance_type = "${var.instance_type}"
+
+  security_groups = [aws_security_group.sginstance.id]
+
   user_data = <<-EOF
               #!/bin/bash
               echo "Hello World!" > index.html
               nohup busybox httpd -f -p 8080 &
             EOF
+}
 
-  tags = {
-    Name = "terraform-myserver1"
+resource "aws_autoscaling_group" "myserver1-asg" {
+  launch_configuration = aws_launch_configuration.myserver1lc.name
+
+  min_size = 2
+  max_size = 3
+  tag {
+    key = "Name"
+    propagate_at_launch = true
+    value = "terraform-myserver1-asg"
   }
 }
