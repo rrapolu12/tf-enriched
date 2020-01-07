@@ -6,7 +6,7 @@
 *.tfstate.*
 
 #For time being not to add provider.tf
-provider.tf
+terraform/provider.tf
 
 # Crash log files
 crash.log
